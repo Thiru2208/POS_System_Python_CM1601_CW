@@ -11,7 +11,6 @@ class TaxManager:
         if os.path.exists(self.billsFile):
             with open(self.billsFile, 'r') as file:
                 return json.load(file)
-
         else:
             return {}
 
@@ -32,9 +31,13 @@ class TaxManager:
                 record = item.copy()
                 record['billNo'] = billNo
 
+                # Ensure internalPrice is included
+                if 'internalPrice' not in record:
+                    record['internalPrice'] = 0.0
+
+                # Checksum generation
                 recordStr = json.dumps(record)
-                checksum = self.generateChecksum(recordStr)
-                record['checksum'] = checksum
+                record['checksum'] = self.generateChecksum(recordStr)
 
                 taxRecords.append(record)
 

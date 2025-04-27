@@ -23,16 +23,28 @@ class BasketManager:
             return
         item['itemName'] = itemName
 
+        #Internal Price
+        while True:
+            try:
+                internalPrice = float(input("Enter Internal Price: "))
+                if internalPrice <= 0:
+                    print("Internal Price must be greater than 0.\n")
+                else:
+                    break
+            except ValueError:
+                print("Invalid input!! Internal Price must be a number.\n")
+        item['internalPrice'] = internalPrice
+
         #Sale Price
         while True:
             try:
                 salePrice = float(input("Enter Sale Price: "))
                 if salePrice <= 0:
-                    print("Sale Price must be greater than 0.")
+                    print("Sale Price must be greater than 0.\n")
                 else:
                     break
             except ValueError:
-                print("Invalid input! Sale Price must be a number.")
+                print("Invalid input! Sale Price must be a number.\n")
         item['salePrice'] = salePrice
 
         #Discount
@@ -60,10 +72,10 @@ class BasketManager:
         item['quantity'] = quantity
 
         #Line total calculation
-        item['lineTotal'] = item['salePrice'] * item['quantity']
+        item['lineTotal'] = item['salePrice'] * item['quantity']-(item['salePrice']*item['quantity']*item['discount']/100.0)
 
         self.basket.append(item)
-        print("Item added successfully!\n")
+        print("Item added successfully! with line total Rs:", item['lineTotal'])
 
     def viewBasket(self):
         if not self.basket:
@@ -71,9 +83,9 @@ class BasketManager:
             return
         print("\n---Current Basket Items---")
         for idx, item in enumerate(self.basket, start=1):
-            print(f"{idx}.Item Code: {item['itemCode']}, Name: {item['itemName']}, "
-              f"Sale Price: Rs.{item['salePrice']}, Discount: {item['discount']}%, "
-              f"Quantity: {item['quantity']}, Line Total: Rs.{item['lineTotal']}")
+            print(f"{idx}. Item Code: {item['itemCode']}, Name: {item['itemName']}, "
+                  f"Internal Price: Rs.{item['internalPrice']}, Sale Price: Rs.{item['salePrice']}, "
+                  f"Discount: {item['discount']}, Quantity: {item['quantity']}, Line Total: Rs.{item['lineTotal']}")
         print()
 
     def deleteItem(self):
@@ -99,39 +111,56 @@ class BasketManager:
             if 0 <= index < len(self.basket):
                 item = self.basket[index]
                 print(f"Updating Item {item['itemName']}")
-                try:
-                    sale_price = float(input("Enter New Sale Price: "))
-                    if sale_price <= 0:
-                        print("Sale Price must be greater than 0.\n")
-                        return
-                except ValueError:
-                    print("Invalid input! Sale Price must be a number.\n")
-                    return
+
+                # New Internal Price
+                while True:
+                    try:
+                        internalPrice = float(input("Enter Internal Price: "))
+                        if internalPrice <= 0:
+                            print("Internal Price must be greater than 0.\n")
+                        else:
+                            break
+                    except ValueError:
+                        print("Invalid input! Internal Price must be a number.\n")
+                item['internalPrice'] = internalPrice
+
+                #New Sale Price
+                while True:
+                    try:
+                        sale_price = float(input("Enter New Sale Price: "))
+                        if sale_price <= 0:
+                            print("Sale Price must be greater than 0.\n")
+                        else:
+                            break
+                    except ValueError:
+                        print("Invalid input! Sale Price must be a number.\n")
                 item['salePrice'] = sale_price
 
                 # Validate new discount
-                try:
-                    discount = float(input("Enter New Discount: "))
-                    if discount < 0:
-                        print("Discount cannot be negative.\n")
-                        return
-                except ValueError:
-                    print("Invalid input! Discount must be a number.\n")
-                    return
+                while True:
+                    try:
+                        discount = float(input("Enter New Discount: "))
+                        if discount < 0:
+                            print("Discount cannot be negative.\n")
+                        else:
+                            break
+                    except ValueError:
+                        print("Invalid input! Discount must be a number.\n")
                 item['discount'] = discount
 
                 # Validate new quantity
-                try:
-                    quantity = int(input("Enter New Quantity: "))
-                    if quantity <= 0:
-                        print("Quantity must be greater than 0.\n")
-                        return
-                except ValueError:
-                    print("Invalid input! Quantity must be an integer.\n")
-                    return
+                while True:
+                    try:
+                        quantity = int(input("Enter New Quantity: "))
+                        if quantity <= 0:
+                            print("Quantity must be greater than 0.\n")
+                        else:
+                            break
+                    except ValueError:
+                        print("Invalid input! Quantity must be an integer.\n")
                 item['quantity'] = quantity
 
-                item['lineTotal'] = item['salePrice'] * item['quantity']
+                item['lineTotal'] = item['salePrice'] * item['quantity']-(item['salePrice']*item['quantity']*item['discount']/100.0)
                 print(f"{item['itemName']} updated successfully!\n")
             else:
                 print("Invalid Item Index! Please try again.\n")

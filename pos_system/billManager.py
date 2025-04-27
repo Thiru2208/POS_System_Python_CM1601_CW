@@ -29,7 +29,11 @@ class BillManager:
 
         billsData[billNo] = basket.copy()
         self.saveBills(billsData)
+
+        total = sum(item['lineTotal'] for item in basket)
+
         print(f"Bill No. {billNo} has been saved successfully.\n")
+        print(f"Grand Total: Rs. {total:.2f}\n")
         basket.clear()
 
     def searchBill(self):
@@ -44,3 +48,13 @@ class BillManager:
              print()
          else:
              print("No such bill.\n")
+
+    def viewAllBills(self):
+        billsData = self.loadBills()
+        if not billsData:
+            print("No bills available.\n")
+        else:
+            for billNo, items in billsData.items():
+                print(f"\n--- Bill No: {billNo} Details ---")
+                for item in items:
+                    print(f"{item}")
